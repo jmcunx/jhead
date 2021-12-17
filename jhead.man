@@ -1,0 +1,96 @@
+.\" 
+.\" Copyright (c) 2007 ... 2016 2017 2018 
+.\"     John McCue <jmccue@jmcunx.com>
+.\" 
+.\" Permission to use, copy, modify, and distribute this software for any
+.\" purpose with or without fee is hereby granted, provided that the above
+.\" copyright notice and this permission notice appear in all copies.
+.\" 
+.\" THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+.\" WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+.\" MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+.\" ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+.\" WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+.\" ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+.\" OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\" 
+.TH jhead 1 "$Date: 2018/07/04 21:34:14 $" "JMC" "Local Command"
+.SH NAME
+jhead - output the first part of 1 or more files to stdout
+.SH SYNOPSIS
+jhead [OPTIONS] [FILE...]
+.SH DESCRIPTION
+Print 10 lines of each FILE to standard output 
+of file name(s) supplied.
+If processing more than one FILE, precede each with a header
+showing the file name.
+Will default to print the first 10 lines,
+but OPTIONS can be used to change the default behavior.
+.PP
+If no files (FILE) are specified on the command line or
+if FILE has name "-", stdin (Standard Input) is used.
+.TP
+-c
+Prefix output with line number.
+.TP
+-E LINE
+End line count and printing at this LINE number.
+Default is to show 10 lines.  (See -n below).
+.TP
+-e file
+Write errors/stats to file 'file'.
+Default is to to use stderr.
+.TP
+-f
+If creating an Output File (see -e and -o), overwrite
+file if it exists, default is to abort if output exists
+.TP
+-h
+Show brief help and exit.
+.TP
+-n NUMBER
+Print 'NUMBER' lines instead of the default of 10 lines.
+.TP
+-o file
+Write output to file 'file'.
+Default is to to use stdout.
+.TP
+-q
+Quiet, never print headers (names of files processed),
+will only attempt to print headers when processing more than 1 file.
+.TP
+-S LINE
+Start line count and printing at this LINE number.
+Will print default of 10 lines or 'NUMBER' lines
+(see above) from this line forward
+.TP
+-v
+Verbose, always print file headers even when
+processing one file.
+.TP
+-V
+output version information and exit.
+.SH DIAGNOSTICS
+Unlike 'head(1)', only '-n #' is supported,
+shortcut option '-#' is not supported.
+.PP
+Only supports text files.
+Processing binary files can return unexpected results.
+.PP
+If available, head(1) may have more options.
+.PP
+If the number of lines to show as determined by 
+arguments '-S' and '-E' is  less than 1, the default
+of 10 lines to show will be used.
+.SH SEE-ALSO
+dd(1),
+head(1),
+j(1),
+jascii(1),
+jtail(1),
+tail(1)
+.SH ERROR-CODES
+.nf
+0 success
+1 processing error or help/rev displayed
+.fi
