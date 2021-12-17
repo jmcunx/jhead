@@ -1,8 +1,12 @@
-## jhd - Hex Dump
+## jhead - clone of head(1)
 
-jhd a kind of od(1) clone for use without
-any kind of Hex or Octal Dump Utility.
-This also contains some options not contained in od(1).
+jhead is a clone of head(1) for systems that
+does not have a full featured head(1).
+But it may have a couple of options not
+found in head(1).
+
+If head(1) exists on your system, you should use that instead.
+It will be much faster.
 
 To build, execute build.sh to generate a Makefile from
 Makefile.template on most BSD/Linux systems and IBM AIX.
