@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007 ... 2020 2021
+ * Copyright (c) 2007 ... 2021 2022
  *     John McCue <jmccue@jmcunx.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
@@ -15,7 +15,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#ifndef _MSDOS
 #include <sys/param.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -28,11 +30,6 @@
 #include "jhead.h"
 
 #define MAXARG 80
-
-char *jhead_a_rev = "$Id: jhead_a.c,v 3.4 2021/02/21 20:01:15 jmccue Exp $";
-
-/*** prototypes ***/
-int open_out(FILE *, struct s_file_info *, char *, int);
 
 /*
  * open_out() -- save the file anem and check status
@@ -211,5 +208,3 @@ void process_arg(int argc, char **argv, work_area *w)
     }
 
 } /* END process_arg() */
-
-/* END: jhead_a.c */

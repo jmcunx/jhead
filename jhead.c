@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007 ... 2020 2021
+ * Copyright (c) 2007 ... 2021 2022
  *     John McCue <jmccue@jmcunx.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
@@ -15,7 +15,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#ifndef _MSDOS
 #include <sys/param.h>
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -31,57 +33,88 @@
 
 #include "jhead.h"
 
-char *jhead_rev="$Id: jhead.c,v 3.9 2021/02/21 20:01:15 jmccue Exp $";
-
-/*** prototypes ***/
-void eoj(work_area *);
-void process_all(int, char **, work_area *);
-void process_a_file(work_area *, char *, char **, size_t *);
-int  open_in(FILE **, char *, FILE *);
-void show_file_heading(FILE *, char *);
-
 /*
- * main()
+ * open_in() -- open in file
  */
-int main(int argc, char **argv)
+int open_in(FILE **in, char *fname, FILE *fp_err)
 
 {
-  work_area w;
 
-#ifdef OpenBSD
-  if(pledge("stdio rpath wpath cpath",NULL) == -1)
-    err(1,"pledge\n");
-#endif
+  int errsave;
 
-  init(&w, argc, argv);
+  if (fname == (char *) NULL)
+    {
+      (*in) = stdin;
+      return((int) TRUE);
+    }
+  if (strcmp(fname, FILE_NAME_STDIN) == 0)
+    {
+      (*in) = stdin;
+      return((int) TRUE);
+    }
 
-  process_all(argc, argv, &w);
+  (*in) = fopen(fname, "r");
+  errsave = errno;
 
-  eoj(&w);
-  exit(EXIT_SUCCESS);
+  if ((*in) == (FILE *) NULL)
+    {
+      fprintf(fp_err, MSG_WARN_W002, fname, strerror(errsave));
+      return((int) FALSE);
+    }
 
-}  /* main() */
+  return((int) TRUE);
+
+} /* open_in() */
 
 /*
- * process_all()
+ * close_out() -- close output
  */
-void process_all(int argc, char **argv, work_area *w)
+void close_out(struct s_file_info *f)
+{
+
+  if (f->fname != (char *) NULL)
+    {
+      fclose(f->fp);
+      free(f->fname);
+      f->fname = (char *) NULL;
+    }
+
+} /* close_out() */
+
+/*
+ * show_file_heading() -- Show run stats
+ */
+void show_file_heading(FILE *fp, char *fname)
 
 {
-  char *buf = (char *) NULL;
-  size_t bsiz = (size_t) 0;
-  int i;
 
-  for (i = optind; i < argc; i++)
-    process_a_file(w, argv[i], &buf, &bsiz);
+  fprintf(fp, "%s\n", LIT_C80);
 
-  if (i == optind)
-    process_a_file(w, FILE_NAME_STDIN, &buf, &bsiz);
+  if (fname == (char *) NULL)
+    fprintf(fp, "%s\n", LIT_STDIN);
+  else
+    {
+      if (strcmp(fname, FILE_NAME_STDIN) == 0)
+	fprintf(fp, "%s\n", LIT_STDIN);
+      else
+	fprintf(fp, "%s\n", fname);
+    }
 
-  if (buf != (char *) NULL)
-    free(buf);
+  fprintf(fp, "%s\n", LIT_C80);
 
-} /* process_all() */
+} /* show_file_heading() */
+
+/*
+ * eoj() -- End of Job
+ */
+void eoj(work_area *w)
+
+{
+
+  close_out(&(w->out));
+  close_out(&(w->err));
+
+} /* eoj() */
 
 /*
  * process_a_file()
@@ -128,86 +161,44 @@ void process_a_file(work_area *w, char *fname,
 } /* process_a_file() */
 
 /*
- * open_in() -- open in file
+ * process_all()
  */
-int open_in(FILE **in, char *fname, FILE *fp_err)
+void process_all(int argc, char **argv, work_area *w)
 
 {
+  char *buf = (char *) NULL;
+  size_t bsiz = (size_t) 0;
+  int i;
 
-  int errsave;
+  for (i = optind; i < argc; i++)
+    process_a_file(w, argv[i], &buf, &bsiz);
 
-  if (fname == (char *) NULL)
-    {
-      (*in) = stdin;
-      return((int) TRUE);
-    }
-  if (strcmp(fname, FILE_NAME_STDIN) == 0)
-    {
-      (*in) = stdin;
-      return((int) TRUE);
-    }
+  if (i == optind)
+    process_a_file(w, FILE_NAME_STDIN, &buf, &bsiz);
 
-  (*in) = fopen(fname, "r");
-  errsave = errno;
+  if (buf != (char *) NULL)
+    free(buf);
 
-  if ((*in) == (FILE *) NULL)
-    {
-      fprintf(fp_err, MSG_WARN_W002, fname, strerror(errsave));
-      return((int) FALSE);
-    }
-
-  return((int) TRUE);
-
-} /* open_in() */
+} /* process_all() */
 
 /*
- * eoj() -- End of Job
-*/
-void eoj(work_area *w)
-
-{
-
-  close_out(&(w->out));
-  close_out(&(w->err));
-
-} /* eoj() */
-
-/*
- * close_out() -- close output
+ * main()
  */
-void close_out(struct s_file_info *f)
-{
-
-  if (f->fname != (char *) NULL)
-    {
-      fclose(f->fp);
-      free(f->fname);
-      f->fname = (char *) NULL;
-    }
-
-} /* close_out() */
-
-/*
- * show_file_heading() -- Show run stats
- */
-void show_file_heading(FILE *fp, char *fname)
+int main(int argc, char **argv)
 
 {
+  work_area w;
 
-  fprintf(fp, "%s\n", LIT_C80);
+#ifdef OpenBSD
+  if(pledge("stdio rpath wpath cpath",NULL) == -1)
+    err(1,"pledge\n");
+#endif
 
-  if (fname == (char *) NULL)
-    fprintf(fp, "%s\n", LIT_STDIN);
-  else
-    {
-      if (strcmp(fname, FILE_NAME_STDIN) == 0)
-	fprintf(fp, "%s\n", LIT_STDIN);
-      else
-	fprintf(fp, "%s\n", fname);
-    }
+  init(&w, argc, argv);
 
-  fprintf(fp, "%s\n", LIT_C80);
+  process_all(argc, argv, &w);
 
-} /* show_file_heading() */
+  eoj(&w);
+  exit(EXIT_SUCCESS);
 
-/* END: jhead.c */
+}  /* main() */

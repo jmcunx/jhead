@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007 ... 2020 2021
+ * Copyright (c) 2007 ... 2021 2022
  *     John McCue <jmccue@jmcunx.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
@@ -15,7 +15,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#ifndef _MSDOS
 #include <sys/param.h>
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -26,8 +28,6 @@
 
 #include "jhead.h"
 
-char *jhead_i_rev = "$Id: jhead_i.c,v 3.4 2021/02/21 20:01:15 jmccue Exp $";
-
 /*
  * f_init_fi() - clear file information
  */
@@ -37,7 +37,7 @@ void f_init_fi(struct s_file_info *f)
   f->fp    = (FILE *) NULL; 
   f->fname = (char *) NULL;
 
-} /* END: f_init_fi() */
+} /* f_init_fi() */
    
 /*
  * clear_work()
@@ -73,9 +73,6 @@ void init(work_area *w, int argc, char **argv)
 
   clear_work(w, argv[0]);
 
-  /* process options */
   process_arg(argc, argv, w);
 
 } /* process_arg() */
-
-/* END: jhead_i.c */

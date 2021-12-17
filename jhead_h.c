@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007 ... 2019 2020 2021
+ * Copyright (c) 2007 ... 2021 2022
  *     John McCue <jmccue@jmcunx.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
@@ -15,7 +15,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#ifndef _MSDOS
 #include <sys/param.h>
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -23,12 +25,6 @@
 #include <j_lib2m.h>
 
 #include "jhead.h"
-
-char *jhead_h_rev = "$Id: jhead_h.c,v 3.4 2021/02/21 20:01:15 jmccue Exp $";
-extern char *rcs_filel;
-extern char *jhead_rev;
-extern char *jhead_a_rev;
-extern char *jhead_i_rev;
 
 #define MSG_HELP_11 "Show lines of a text file"
 
@@ -40,18 +36,9 @@ int show_rev(work_area *w)
 {
 
   fprintf(w->out.fp,"%s %s:\n", w->prog_name, LIT_REV);
-  fprintf(w->out.fp,"\t%s\n", JHEAD_H_REV);
-  fprintf(w->out.fp,"\t%s\n", jhead_rev);
-  fprintf(w->out.fp,"\t%s\n", jhead_a_rev);
-  fprintf(w->out.fp,"\t%s\n", jhead_h_rev);
-  fprintf(w->out.fp,"\t%s\n", jhead_i_rev);
 
 #ifdef J_LIB2_H
-  fprintf(w->out.fp, "\t%s\n", J_LIB2_H);
-  fprintf(w->out.fp, "\t     %s %s\n", LIT_INFO_02, j2_get_build());
-#endif
-#ifdef J_LIB2M_H
-  fprintf(w->out.fp, "\t%s\n", J_LIB2M_H);
+  fprintf(w->out.fp, "\t%s %s\n", LIT_INFO_02, j2_get_build());
 #endif
 
 #ifdef OSTYPE
@@ -92,6 +79,4 @@ int show_brief_help(work_area *w)
 
   return(EXIT_FAILURE);
 
-} /* END: show_brief_help() */
-
-/* END: jhead_h.c */
+} /* show_brief_help() */

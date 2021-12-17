@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007 ... 2020 2021
+ * Copyright (c) 2007 ... 2021 2022
  *     John McCue <jmccue@jmcunx.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
@@ -17,7 +17,7 @@
 
 #ifndef JHEAD_H_REV
 
-#define JHEAD_H_REV "$Id: jhead.h,v 3.2 2020/06/14 20:08:01 jmccue Exp $"
+#define JHEAD_H_REV "INCLUDED"
 
 #define PROG_NAME      "jhead"
 #define JHEAD_MSG_SIZE 256
@@ -59,5 +59,3 @@ void close_out(struct s_file_info *);
 void init_finfo(struct s_file_info *);
 
 #endif /* JHEAD_H_REV */
-
-/* END: jhead.h */
