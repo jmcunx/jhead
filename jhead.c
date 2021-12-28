@@ -134,7 +134,7 @@ void process_a_file(work_area *w, char *fname,
   if ( ! open_in(&fp, fname, w->err.fp) )
     return;
 
-  while (getline(buf, bsiz, fp) > (ssize_t) -1)
+  while (j2_getline(buf, bsiz, fp) > (ssize_t) -1)
     {
       lines_read++;
       if (lines_read >= w->start_line)
